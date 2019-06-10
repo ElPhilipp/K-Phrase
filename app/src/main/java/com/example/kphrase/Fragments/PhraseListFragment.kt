@@ -2,51 +2,39 @@ package com.example.kphrase.Fragments
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
-import com.example.kphrase.Categories
-import com.example.kphrase.FirebaseRef
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.kphrase.PhrasesViewRecyclerViewAdapter
 
 import com.example.kphrase.R
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.example.kphrase.MainActivity
-import java.nio.file.Files.size
-import com.google.firebase.database.GenericTypeIndicator
 
 class PhraseListFragment : Fragment() {
     var TAG = "LISTFRAG"
+    lateinit var phrasesView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_phrase_list, container, false)
 
         val arg = arguments?.let { PhraseListFragmentArgs.fromBundle(it) }
-        val vId = arg!!.id
+        val list = arg!!.list.categorie
 
-        Toast.makeText(context, vId.toString(), Toast.LENGTH_SHORT).show()
+        phrasesView = view.findViewById(R.id.phrasesview)
 
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val children = dataSnapshot.children
-                children.forEach {
-                    Log.d("TEST", it.toString())
-                }
-            }
+        phrasesView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-                // ...
-            }
-        }
-        FirebaseRef.database.addValueEventListener(postListener)
+        val itemDecor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        itemDecor.setDrawable(ContextCompat.getDrawable(context!!, R.drawable.dividerwhite)!!)
+        phrasesView.addItemDecoration(itemDecor)
+
+        phrasesView.adapter = PhrasesViewRecyclerViewAdapter(list!!, context)
 
         return view
     }

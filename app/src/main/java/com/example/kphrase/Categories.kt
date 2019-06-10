@@ -1,10 +1,12 @@
 package com.example.kphrase
 
-class Categories {
-        companion object Factory {
-                fun create(): Categories = Categories()
-        }
+import java.io.Serializable
 
-        var objectId: String? = null
-        var phrase: String? = null
+class Categories(
+    var Id: String,
+    var ENG_NAME: String,
+    var ENG_KOR_NAME: String,
+    var KOREAN: String,
+    var AUDIO_FILE_NAME: String): Serializable {
+
 }
